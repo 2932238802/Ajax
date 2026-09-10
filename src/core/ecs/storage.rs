@@ -15,7 +15,6 @@ pub struct LosStorage<T>
 
 // 读取 存储 
 impl<T> LosStorage<T>{
-
     // new
     pub fn new() -> Self
     {
