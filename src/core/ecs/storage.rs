@@ -25,6 +25,14 @@ impl<T> LosStorage<T>{
 
 
 
+    // 插入输入
+    pub fn insert(&mut self,entity:LosEntity,value: T)
+    {
+        self._l_data.insert(entity, value);
+    }
+
+
+    
     // 获得元素
     pub fn get(&self,entity:LosEntity) -> Option<&T>
     {

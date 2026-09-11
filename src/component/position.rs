@@ -1,7 +1,17 @@
 
 // 位置
-pub struct LosPosition
-{
-    pub l_x: i32, // l_x x 位置
-    pub l_y: i32  // l_y y 位置
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum LosPositionEnum {
+    HOME,
+    FOREST1,
+    FOREST2,
+    RIVERO1
+}
+
+
+
+// 位置
+#[derive(Debug, Clone, PartialEq)]
+pub struct LosPosition {
+    pub l_position: LosPositionEnum,
 }
