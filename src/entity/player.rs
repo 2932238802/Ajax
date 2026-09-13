@@ -1,5 +1,5 @@
 use crate::{
-    component::{position::LosPositionEnum, LosHealth, LosPosition},
+    component::{LosHealth, LosPosition},
     core::ecs::{LosEntity, LosWorld},
 };
 
@@ -13,14 +13,15 @@ impl LosPlayer {
         world.add_component(
             entity,
             LosHealth {
-                l_current: 100,
-                l_max: 100,
+                l_current: 100.0,
+                l_max: 100.0,
             },
         );
         world.add_component(
             entity,
+            // 默认出生在家里
             LosPosition {
-                l_position: LosPositionEnum::HOME,
+                l_position: crate::core::map::terrain::LosTerrain::Home,
             },
         );
         entity

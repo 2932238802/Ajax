@@ -5,10 +5,14 @@ use std::{
 
 use crate::{
     component::{LosHealth, LosPosition},
-    core::ecs::{LosEntity, LosStorage},
+    core::{
+        ecs::{LosEntity, LosStorage},
+        map::map::LosMap
+    },
 };
 
 pub struct LosWorld {
+    pub l_map: LosMap,
     _l_next_entity_id: u32,
     _l_storages: HashMap<TypeId, Box<dyn Any>>,
 }
@@ -17,6 +21,7 @@ pub struct LosWorld {
 impl LosWorld {
     pub fn new() -> Self {
         Self {
+            l_map: LosMap::new(11, 11),
             _l_next_entity_id: 0,
             _l_storages: HashMap::new(), // _l_health_storage: LosStorage<LosHealth>::new(),
                                          // 这两种写法都是 合法的
@@ -60,8 +65,8 @@ impl LosWorld {
 
     // 获得可以 改变的 component
     // 通过一个实体
-    // 一个 类型 映射 类型存储器 
-    // 类型存储器 里面存的是 entity 对应一个该类型的实际的值 
+    // 一个 类型 映射 类型存储器
+    // 类型存储器 里面存的是 entity 对应一个该类型的实际的值
     // TypeId::of::<T>() 获取类型 ID
     // 从 _l_storages 中找到对应类型的存储
     // 如果不存在，创建新的 LosStorage<T>

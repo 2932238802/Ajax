@@ -1,17 +1,13 @@
+use crate::core::map::terrain::LosTerrain;
+use serde::{Deserialize, Serialize};
 
 // 位置
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum LosPositionEnum {
-    HOME,
-    FOREST1,
-    FOREST2,
-    RIVERO1
-}
-
-
-
-// 位置
-#[derive(Debug, Clone, PartialEq)]
+#[derive(
+    Debug, 
+    Clone, 
+    PartialEq,
+    Deserialize, 
+    Serialize)]
 pub struct LosPosition {
-    pub l_position: LosPositionEnum,
+    pub l_position: LosTerrain,
 }

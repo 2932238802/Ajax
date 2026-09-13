@@ -2,6 +2,6 @@
 
 pub struct LosHealth
 {
-    pub l_current: i32,
-    pub l_max: i32
+    pub l_current: f64,
+    pub l_max: f64
 }
