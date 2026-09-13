@@ -1,6 +1,9 @@
 use crate::{
     component::{LosHealth, LosPosition},
-    core::ecs::{LosEntity, LosWorld},
+    core::{
+        ecs::{entity, LosEntity, LosWorld},
+        save::data::SavePlayer,
+    },
 };
 
 // 提供一个静态函数
@@ -22,6 +25,25 @@ impl LosPlayer {
             // 默认出生在家里
             LosPosition {
                 l_position: crate::core::map::terrain::LosTerrain::Home,
+            },
+        );
+        entity
+    }
+
+    pub fn from_save_data(data: &SavePlayer, world: &mut LosWorld) -> LosEntity {
+        let entity: LosEntity = world.spawn();
+        world.add_component(
+            entity,
+            LosHealth {
+                l_current: data.l_state.l_cur_health,
+                l_max: data.l_state.l_cur_max_health,
+            },
+        );
+        world.add_component(
+            entity,
+            // 默认出生在家里
+            LosPosition {
+                l_position: data.l_position.l_position,
             },
         );
         entity

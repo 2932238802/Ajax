@@ -1,6 +1,6 @@
 use std::{print, println};
 
-use crate::core::map::terrain::LosTerrain;
+use crate::core::{map::terrain::LosTerrain, save::data::SaveMap};
 use rand::{rngs::ThreadRng, Rng, RngExt};
 
 // LosMap
@@ -48,11 +48,19 @@ impl LosMap {
         los_map
     }
 
-    pub fn get_data(&self) -> &[Vec<LosTerrain>]
-    {
+    pub fn get_data(&self) -> &[Vec<LosTerrain>] {
         &self.l_map
     }
 
+    // 克隆数据
+    pub fn from_save_data(map: &SaveMap) -> Self {
+        let map: Self = Self {
+            l_map: map.l_map.clone(),
+            l_width: map.l_map.len(),
+            l_height: map.l_map[0].len(),
+        };
+        map
+    }
 
     // 计算两个位置的沟谷位置
     pub fn distance(&self, from: (usize, usize), to: (usize, usize)) -> f64 {

@@ -25,7 +25,6 @@ impl LosWorld {
             _l_next_entity_id: 0,
             _l_storages: HashMap::new(), // _l_health_storage: LosStorage<LosHealth>::new(),
                                          // 这两种写法都是 合法的
-                                         //
         }
     }
 
