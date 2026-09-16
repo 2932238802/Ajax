@@ -1,6 +1,5 @@
 pub const WELCOME_STR: &str = "Welcome Ajax!";
-pub const MAIN_MENU : &str = 
-r#"
+pub const MAIN_MENU: &str = r#"
 ========================
 Ajax(made by LosAngelous)
 ========================
@@ -11,6 +10,18 @@ Ajax(made by LosAngelous)
 5. 退出游戏
 ========================
 "#;
+pub const MAP_TITLE: &str = "Los Map";
+pub const LT_HOME: &str = "H"; // 家
+pub const LT_FOREST: &str = "L"; // 林
+pub const LT_PLAINS: &str = "Y"; // 平原
+pub const LT_MOUNTAIN: &str = "S"; // 山
+pub const LT_RIVER: &str = "R"; // 河流
+pub const LT_SWAMP: &str = "Z"; // 沼泽
+pub const LT_DESERT: &str = "M"; // 沙漠
+pub const LT_CAVE: &str = "C"; // 洞
+pub const LT_BEACH: &str = "T"; // 沙滩
+pub const LT_LAKE: &str = "A"; // 湖
+pub const LT_NONE: &str = "."; // 家
 
 // FILE str
 pub const SAVE_FOLDER: &str = ".ajax";

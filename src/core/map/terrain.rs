@@ -29,16 +29,16 @@ pub enum LosTerrain {
 impl Display for LosTerrain {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            LosTerrain::Home => write!(f, "家"),
-            LosTerrain::Forest => write!(f, "森林"),
-            LosTerrain::Plains => write!(f, "平原"),
-            LosTerrain::Mountain => write!(f, "山地"),
-            LosTerrain::River => write!(f, "河流"),
-            LosTerrain::Swamp => write!(f, "沼泽"),
-            LosTerrain::Desert => write!(f, "沙漠"),
-            LosTerrain::Cave => write!(f, "洞穴"),
-            LosTerrain::Beach => write!(f, "沙滩"),
-            LosTerrain::Lake => write!(f, "湖泊"),
+            LosTerrain::Home => write!(f, "H"),
+            LosTerrain::Forest => write!(f, "L"),
+            LosTerrain::Plains => write!(f, "Y"),
+            LosTerrain::Mountain => write!(f, "S"),
+            LosTerrain::River => write!(f, "R"),
+            LosTerrain::Swamp => write!(f, "Z"),
+            LosTerrain::Desert => write!(f, "M"),
+            LosTerrain::Cave => write!(f, "C"),
+            LosTerrain::Beach => write!(f, "T"),
+            LosTerrain::Lake => write!(f, "A"),
             LosTerrain::None => write!(f, "    "),
         }
     }

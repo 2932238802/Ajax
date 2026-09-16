@@ -9,7 +9,7 @@ use crate::{
     component::{LosHealth, LosPosition},
     constants::{constant_class::GameState, constant_str},
     core::{
-        ecs::{LosEntity, LosWorld},
+        world::{LosEntity, LosWorld},
         map::map::LosMap,
         save::data::{SaveData, SaveMap, SavePlayer, SaveState},
     },
@@ -295,7 +295,7 @@ impl LosGame {
             }
             "5" => {
                 println!("{}", "→ 正在退出...".red());
-                self.save();
+                // self.save(); 推出 就是
                 self.l_game_state = GameState::Exit;
             }
             _ => {

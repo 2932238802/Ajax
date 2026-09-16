@@ -6,7 +6,7 @@ use std::{
 use crate::{
     component::{LosHealth, LosPosition},
     core::{
-        ecs::{LosEntity, LosStorage},
+        world::{LosEntity, LosStorage},
         map::map::LosMap
     },
 };

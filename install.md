@@ -45,5 +45,3 @@ src/
     ├── mod.rs
     ├── game.rs
     └── schedule.rs
-
-

@@ -6,10 +6,9 @@ use crate::{component::LosPosition, core::map::terrain::LosTerrain};
 
 // 存储的数据
 #[derive(Debug, Serialize, Deserialize)]
-pub struct SaveData 
-{
+pub struct SaveData {
     pub l_player: SavePlayer,
-    pub l_map: SaveMap
+    pub l_map: SaveMap,
 }
 
 // 个人的信息
@@ -31,5 +30,5 @@ pub struct SaveMap {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SaveState {
     pub l_cur_health: f64,
-    pub l_cur_max_health: f64
+    pub l_cur_max_health: f64,
 }

@@ -9,6 +9,7 @@ pub enum LosCommand {
     MOVE,
 
     MAP, // 打印地图
+    GO{des:String},  // 前往指令
 
     UNKNOWN(String),
 }
