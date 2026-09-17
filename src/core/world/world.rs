@@ -6,13 +6,8 @@ use std::{
 use crate::{
     constants::constant_number,
     core::{
-<<<<<<< Updated upstream:src/core/world/world.rs
-        world::{LosEntity, LosStorage},
-        map::map::LosMap
-=======
-        ecs::{LosEntity, LosStorage},
         map::map::LosMap,
->>>>>>> Stashed changes:src/core/ecs/world.rs
+        world::{LosEntity, LosStorage},
     },
 };
 

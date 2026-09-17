@@ -6,3 +6,6 @@ pub enum GameState {
     Loading,  // 加载状态
     Exit,     // 退出状态
 }
+
+// 播放action 的动画
+pub const ACTION_ANIMATION: [&str; 10] = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];

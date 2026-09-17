@@ -9,6 +9,7 @@ use crate::{component::LosPosition, core::map::terrain::LosTerrain};
 pub struct SaveData {
     pub l_player: SavePlayer,
     pub l_map: SaveMap,
+    pub l_time: SaveTime
 }
 
 // 个人的信息
@@ -25,18 +26,20 @@ pub struct SaveMap {
     pub l_map: Vec<Vec<LosTerrain>>,
 }
 
+#[derive(Debug,Serialize,Deserialize)]
+pub struct SaveTime
+{
+    pub l_elasped:u64,
+}
+
 // 状态信息 这里一般是个人的信息
 // l_cur_health 当前的健康状态
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SaveState {
     pub l_cur_health: f64,
-<<<<<<< Updated upstream
-    pub l_cur_max_health: f64,
-=======
     pub l_health_max: f64,
     pub l_cur_mental: f64,
     pub l_mental_max: f64,
     pub l_cur_hungry: f64,
-    pub l_hungry_max: f64
->>>>>>> Stashed changes
+    pub l_hungry_max: f64,
 }

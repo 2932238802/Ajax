@@ -1,7 +1,7 @@
 use crate::{
     component::{LosHealth, LosHungry, LosMental, LosPosition},
     core::{
-        ecs::{entity, LosEntity, LosWorld},
+        world::{entity, LosEntity, LosWorld},
         save::data::SavePlayer,
     },
 };

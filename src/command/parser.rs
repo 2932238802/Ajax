@@ -13,14 +13,36 @@ pub fn parser(input_command: &str) -> LosCommand {
         Some(command) => command.to_lowercase(),
         None => return LosCommand::UNKNOWN(String::new()),
     };
+
+    // #[derive(Debug, Clone, PartialEq)]
+    // pub enum LosCommand {
+    //     EXIT, // 退出游戏 quit
+    //     HELP, //
+    //     STOP, // 游戏暂停
+    //     SAVE, // 游戏保存
+
+    //     STATUS, // 状态指令
+    //     TIME,               // 时间指令
+    //     MAP,                // 打印地图
+    //     GO { des: String }, // 前往指令
+
+    //     UNKNOWN(String),
+    // }
+
     match command.as_str() {
+        "quit" | "exit" | "q" => LosCommand::EXIT,
+
         "help" | "h" => LosCommand::HELP,
+
+        "stop" | "p" => LosCommand::STOP,
+
+        "save" => LosCommand::SAVE,
 
         "status" | "s" => LosCommand::STATUS,
 
-        "map" | "m" => LosCommand::MAP,
+        "time" | "t" => LosCommand::TIME,
 
-        "quit" | "exit" | "q" => LosCommand::EXIT,
+        "map" | "m" => LosCommand::MAP,
 
         "go" | "g" => {
             if number != 2 {
@@ -29,7 +51,8 @@ pub fn parser(input_command: &str) -> LosCommand {
             match parts.next() {
                 Some(dest) => {
                     if LosMap::isvalid(dest) {
-                        LosCommand::GO { // 返回 go
+                        LosCommand::GO {
+                            // 返回 go
                             des: dest.to_string(),
                         }
                     } else {

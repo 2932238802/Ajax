@@ -9,9 +9,10 @@ use crate::{
     component::{LosHealth, LosHungry, LosMental, LosPosition},
     constants::{constant_class::GameState, constant_str},
     core::{
-        world::{LosEntity, LosWorld},
         map::map::LosMap,
-        save::data::{SaveData, SaveMap, SavePlayer, SaveState},
+        save::data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
+        time::time::LosTime,
+        world::{LosEntity, LosWorld},
     },
     entity::player::LosPlayer,
 };
@@ -21,6 +22,7 @@ use colored::*;
 // 主要游戏界面
 pub struct LosGame {
     pub l_world: LosWorld,
+    pub l_time: LosTime,
     pub l_player: LosEntity,
     l_running: bool,
     l_has_save_data: bool, // 是不是有存档
@@ -34,13 +36,15 @@ impl LosGame {
     pub fn new() -> Self {
         match Self::load() {
             Ok(game) => game,
-            Err(err_string) => {
+            Err(_) => {
                 let mut world = LosWorld::new();
                 let player = LosPlayer::spawn(&mut world);
+                let time = LosTime::new();
                 Self {
                     l_world: world,
                     l_player: player,
                     l_running: true,
+                    l_time: time,
                     l_has_save_data: false,
                     l_game_state: GameState::MainMenu,
                 }
@@ -124,6 +128,10 @@ impl LosGame {
                     l_mental_max: player_mental_state.l_max,
                 },
             },
+
+            l_time: SaveTime {
+                l_elasped: self.l_time.total_minutes(),
+            },
         };
 
         let json = match serde_json::to_string_pretty(&save_state) {
@@ -179,17 +187,20 @@ impl LosGame {
         let mut world = LosWorld::new();
         world.l_map = map;
         let player = LosPlayer::from_save_data(&save_data.l_player, &mut world);
+        let time = LosTime::from_save_data(&save_data.l_time);
         Ok(Self {
             l_world: world,
             l_player: player,
             l_running: true,
             l_has_save_data: true,
+            l_time: time,
             l_game_state: GameState::MainMenu,
         })
     }
 
     // 开始游戏
     fn _playing(&mut self) {
+        self.l_time.update();
         let health = self
             .l_world
             .get_component::<LosHealth>(self.l_player)
