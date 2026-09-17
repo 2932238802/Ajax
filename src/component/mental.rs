@@ -1,3 +1,4 @@
+
 use serde::{Deserialize, Serialize};
 
 #[derive(
@@ -6,8 +7,7 @@ use serde::{Deserialize, Serialize};
     PartialEq,
     Deserialize, 
     Serialize)]
-pub struct LosHealth
-{
+pub struct LosMental {
     pub l_current: f64,
-    pub l_max: f64
+    pub l_max: f64,
 }

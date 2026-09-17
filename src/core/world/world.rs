@@ -4,10 +4,15 @@ use std::{
 };
 
 use crate::{
-    component::{LosHealth, LosPosition},
+    constants::constant_number,
     core::{
+<<<<<<< Updated upstream:src/core/world/world.rs
         world::{LosEntity, LosStorage},
         map::map::LosMap
+=======
+        ecs::{LosEntity, LosStorage},
+        map::map::LosMap,
+>>>>>>> Stashed changes:src/core/ecs/world.rs
     },
 };
 
@@ -17,11 +22,13 @@ pub struct LosWorld {
     _l_storages: HashMap<TypeId, Box<dyn Any>>,
 }
 
-//
 impl LosWorld {
     pub fn new() -> Self {
         Self {
-            l_map: LosMap::new(11, 11),
+            l_map: LosMap::new(
+                constant_number::DEFAULT_WIDTH,
+                constant_number::DEAFULT_HEIGHT,
+            ),
             _l_next_entity_id: 0,
             _l_storages: HashMap::new(), // _l_health_storage: LosStorage<LosHealth>::new(),
                                          // 这两种写法都是 合法的

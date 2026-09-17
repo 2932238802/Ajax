@@ -30,5 +30,13 @@ pub struct SaveMap {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SaveState {
     pub l_cur_health: f64,
+<<<<<<< Updated upstream
     pub l_cur_max_health: f64,
+=======
+    pub l_health_max: f64,
+    pub l_cur_mental: f64,
+    pub l_mental_max: f64,
+    pub l_cur_hungry: f64,
+    pub l_hungry_max: f64
+>>>>>>> Stashed changes
 }

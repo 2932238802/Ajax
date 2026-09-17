@@ -6,7 +6,7 @@ use std::{
 
 use crate::{
     command::{parser::parser, router::router},
-    component::{LosHealth, LosPosition},
+    component::{LosHealth, LosHungry, LosMental, LosPosition},
     constants::{constant_class::GameState, constant_str},
     core::{
         world::{LosEntity, LosWorld},
@@ -76,7 +76,6 @@ impl LosGame {
                 }
             }
         }
-
         println!("程序已退出");
     }
 
@@ -98,6 +97,16 @@ impl LosGame {
             .get_component::<LosHealth>(self.l_player)
             .expect("玩家缺少健康状态组件");
 
+        let player_hungry_state = self
+            .l_world
+            .get_component::<LosHungry>(self.l_player)
+            .expect("玩家缺少饥饿状态组件");
+
+        let player_mental_state = self
+            .l_world
+            .get_component::<LosMental>(self.l_player)
+            .expect("玩家缺少精神状态组件");
+
         let save_state = SaveData {
             l_map: SaveMap {
                 l_map: self.l_world.l_map.get_data().to_vec(),
@@ -106,10 +115,13 @@ impl LosGame {
             l_player: SavePlayer {
                 l_entity_id: self.l_player.l_id,
                 l_position: position.clone(),
-
                 l_state: SaveState {
                     l_cur_health: player_health_state.l_current,
-                    l_cur_max_health: player_health_state.l_max,
+                    l_health_max: player_health_state.l_max,
+                    l_cur_hungry: player_hungry_state.l_current,
+                    l_hungry_max: player_hungry_state.l_max,
+                    l_cur_mental: player_mental_state.l_current,
+                    l_mental_max: player_mental_state.l_max,
                 },
             },
         };
@@ -178,7 +190,22 @@ impl LosGame {
 
     // 开始游戏
     fn _playing(&mut self) {
-        print!("> ");
+        let health = self
+            .l_world
+            .get_component::<LosHealth>(self.l_player)
+            .unwrap();
+        let hungry = self
+            .l_world
+            .get_component::<LosHungry>(self.l_player)
+            .unwrap();
+        let mental = self
+            .l_world
+            .get_component::<LosMental>(self.l_player)
+            .unwrap();
+        print!(
+            "health: {} | hungry: {} | mental: {}> ",
+            health.l_current, hungry.l_current, mental.l_current
+        );
         if let Err(error) = io::stdout().flush() {
             eprintln!("数据刷新失败! {}", error);
         }

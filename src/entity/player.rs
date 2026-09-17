@@ -1,5 +1,5 @@
 use crate::{
-    component::{LosHealth, LosPosition},
+    component::{LosHealth, LosHungry, LosMental, LosPosition},
     core::{
         ecs::{entity, LosEntity, LosWorld},
         save::data::SavePlayer,
@@ -22,6 +22,20 @@ impl LosPlayer {
         );
         world.add_component(
             entity,
+            LosHungry {
+                l_current: 100.0,
+                l_max: 100.0,
+            },
+        );
+        world.add_component(
+            entity,
+            LosMental {
+                l_current: 100.0,
+                l_max: 100.0,
+            },
+        );
+        world.add_component(
+            entity,
             // 默认出生在家里
             LosPosition {
                 l_position: crate::core::map::terrain::LosTerrain::Home,
@@ -30,13 +44,28 @@ impl LosPlayer {
         entity
     }
 
+    // 从 保存的数据里 来
     pub fn from_save_data(data: &SavePlayer, world: &mut LosWorld) -> LosEntity {
         let entity: LosEntity = world.spawn();
         world.add_component(
             entity,
             LosHealth {
                 l_current: data.l_state.l_cur_health,
-                l_max: data.l_state.l_cur_max_health,
+                l_max: data.l_state.l_health_max,
+            },
+        );
+        world.add_component(
+            entity,
+            LosHungry {
+                l_current: data.l_state.l_cur_health,
+                l_max: data.l_state.l_health_max,
+            },
+        );
+        world.add_component(
+            entity,
+            LosMental {
+                l_current: data.l_state.l_cur_health,
+                l_max: data.l_state.l_health_max,
             },
         );
         world.add_component(
