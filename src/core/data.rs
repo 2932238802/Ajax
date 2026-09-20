@@ -1,15 +1,13 @@
-use std::vec;
-
+use crate::{component::LosPosition, core::terrain::LosTerrain};
 use serde::{Deserialize, Serialize};
-
-use crate::{component::LosPosition, core::map::terrain::LosTerrain};
+use std::vec;
 
 // 存储的数据
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SaveData {
     pub l_player: SavePlayer,
     pub l_map: SaveMap,
-    pub l_time: SaveTime
+    pub l_time: SaveTime,
 }
 
 // 个人的信息
@@ -26,10 +24,9 @@ pub struct SaveMap {
     pub l_map: Vec<Vec<LosTerrain>>,
 }
 
-#[derive(Debug,Serialize,Deserialize)]
-pub struct SaveTime
-{
-    pub l_elasped:u64,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SaveTime {
+    pub l_elasped: u64,
 }
 
 // 状态信息 这里一般是个人的信息

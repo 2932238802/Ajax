@@ -1,8 +1,7 @@
 use crate::{
     component::LosPosition,
-    core::{game::LosGame, map::map::LosMap},
+    core::{game::LosGame, map::LosMap},
 };
-
 
 // 展示地图
 // 就是拿到 LosGame
@@ -13,8 +12,7 @@ pub fn show_map(game: &mut LosGame) {
             let map: &LosMap = &game.l_world.l_map;
             map.show(position);
         }
-        None => 
-        {
+        None => {
             eprintln!("player 没有 position 这个组件! 内部错误");
         }
     }

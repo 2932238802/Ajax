@@ -32,4 +32,6 @@ impl<T> LosStorage<T> {
     pub fn get_mut(&mut self, entity: LosEntity) -> Option<&mut T> {
         self._l_data.get_mut(&entity)
     }
+
+
 }

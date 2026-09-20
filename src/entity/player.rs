@@ -1,8 +1,8 @@
 use crate::{
     component::{LosHealth, LosHungry, LosMental, LosPosition},
     core::{
+        data::SavePlayer,
         world::{entity, LosEntity, LosWorld},
-        save::data::SavePlayer,
     },
 };
 
@@ -38,7 +38,7 @@ impl LosPlayer {
             entity,
             // 默认出生在家里
             LosPosition {
-                l_position: crate::core::map::terrain::LosTerrain::Home,
+                l_position: crate::core::terrain::LosTerrain::Home,
             },
         );
         entity

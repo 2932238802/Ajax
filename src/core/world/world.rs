@@ -1,32 +1,44 @@
 use std::{
     any::{Any, TypeId},
     collections::HashMap,
+    hash::Hash,
 };
 
 use crate::{
+    component::update_able::UpdateAbleByTime,
     constants::constant_number,
     core::{
-        map::map::LosMap,
+        event::LosEvent,
+        map::LosMap,
         world::{LosEntity, LosStorage},
     },
 };
 
 pub struct LosWorld {
     pub l_map: LosMap,
+    pub l_updatable_types: Vec<TypeId>,
     _l_next_entity_id: u32,
     _l_storages: HashMap<TypeId, Box<dyn Any>>,
 }
-
 impl LosWorld {
     pub fn new() -> Self {
         Self {
             l_map: LosMap::new(
                 constant_number::DEFAULT_WIDTH,
-                constant_number::DEAFULT_HEIGHT,
+                constant_number::DEFAULT_HEIGHT,
             ),
             _l_next_entity_id: 0,
             _l_storages: HashMap::new(), // _l_health_storage: LosStorage<LosHealth>::new(),
-                                         // 这两种写法都是 合法的
+            // 这两种写法都是 合法的
+            l_updatable_types: Vec::new(),
+        }
+    }
+
+    // 表示 可以 更新的类型有哪些
+    pub fn mark_as_updateablebytime<T: UpdateAbleByTime + 'static>(&mut self) {
+        let type_id = TypeId::of::<T>();
+        if !self.l_updatable_types.contains(&type_id) {
+            self.l_updatable_types.push(type_id);
         }
     }
 

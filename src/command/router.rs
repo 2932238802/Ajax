@@ -1,9 +1,17 @@
 use crate::{
     command::{
         commands::commands::LosCommand,
-        executor::{exit::exit, go::go, help::help, save::save, show_map::show_map,time::time},
+        executor::{
+            exit::exit,
+            go::go,
+            help::help,
+            save::save,
+            show_map::show_map,
+            status::{status, ExeStatusMode},
+            time::time,
+        },
     },
-    core::{game::LosGame, world::LosWorld},
+    core::game::LosGame,
 };
 
 // 指令路由器
@@ -19,8 +27,9 @@ pub fn router(command: LosCommand, game: &mut LosGame) {
         LosCommand::SAVE => {
             save(game);
         }
-
-        LosCommand::STATUS => {}
+        LosCommand::STATUS { mode } => {
+            status(game, mode);
+        }
         LosCommand::TIME => {
             time(game);
         }

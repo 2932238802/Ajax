@@ -9,9 +9,9 @@ use crate::{
     component::{LosHealth, LosHungry, LosMental, LosPosition},
     constants::{constant_class::GameState, constant_str},
     core::{
-        map::map::LosMap,
-        save::data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
-        time::time::LosTime,
+        data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
+        map::LosMap,
+        time::LosTime,
         world::{LosEntity, LosWorld},
     },
     entity::player::LosPlayer,
@@ -200,23 +200,10 @@ impl LosGame {
 
     // 开始游戏
     fn _playing(&mut self) {
-        self.l_time.update();
-        let health = self
-            .l_world
-            .get_component::<LosHealth>(self.l_player)
-            .unwrap();
-        let hungry = self
-            .l_world
-            .get_component::<LosHungry>(self.l_player)
-            .unwrap();
-        let mental = self
-            .l_world
-            .get_component::<LosMental>(self.l_player)
-            .unwrap();
-        print!(
-            "health: {} | hungry: {} | mental: {}> ",
-            health.l_current, hungry.l_current, mental.l_current
-        );
+        let elasped_minute = self.l_time.update();
+        self._update(elasped_minute);
+      
+        print!("> ");
         if let Err(error) = io::stdout().flush() {
             eprintln!("数据刷新失败! {}", error);
         }
@@ -345,4 +332,15 @@ impl LosGame {
     fn _settings(&mut self) {}
 
     fn _loading(&mut self) {}
+
+    fn _update(&mut self, elasped_minute: f64) {
+        if elasped_minute == 0.0 {
+            return;
+        }
+        for type_id in self.l_world.l_updatable_types.clone()
+        {
+            // 每一个 类型
+            
+        }
+    }
 }

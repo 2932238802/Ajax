@@ -9,7 +9,7 @@
 
 use crate::constants::constant_class::ACTION_ANIMATION;
 use crate::constants::constant_number::DEFAULT_TIME_MULTY;
-use crate::core::save::data::SaveTime;
+use crate::core::data::SaveTime;
 use core::fmt;
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter, Result};
@@ -64,19 +64,21 @@ impl LosTime {
     }
 
     // 更新时间
-    pub fn update(&mut self) {
+    pub fn update(&mut self) -> f64 {
         if self.l_paused {
-            return;
+            return 0.0;
         }
         let now = Instant::now(); // 此刻
         let elaspe = now.duration_since(self.l_last_update);
         let seconds = elaspe.as_secs();
+        let mut minuted_elaspe = 0.0;
         if seconds > 0 {
-            let minuted_elaspe:f64 = seconds as f64 * DEFAULT_TIME_MULTY;
+            minuted_elaspe = seconds as f64 * DEFAULT_TIME_MULTY;
             self.l_game_minutes += minuted_elaspe as u64;
             self.l_last_update += std::time::Duration::from_secs(seconds);
         }
-    } 
+        minuted_elaspe
+    }
 
     // 往前 推 时间
     pub fn advance_minutes(&mut self, minutes: u64) {

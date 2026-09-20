@@ -6,7 +6,7 @@ use crate::{
         LT_BEACH, LT_CAVE, LT_DESERT, LT_FOREST, LT_HOME, LT_LAKE, LT_MOUNTAIN, LT_PLAINS,
         LT_RIVER, LT_SWAMP, MAP_TITLE,
     },
-    core::{map::terrain::LosTerrain, save::data::SaveMap},
+    core::{data::SaveMap, terrain::LosTerrain},
 };
 use colored::*;
 use rand::{Rng, RngExt};

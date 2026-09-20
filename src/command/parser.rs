@@ -1,4 +1,11 @@
-use crate::{command::commands::commands::LosCommand, core::map::map::LosMap};
+use std::char::ToLowercase;
+
+use serde::de;
+
+use crate::{
+    command::{commands::commands::LosCommand, executor::status::ExeStatusMode},
+    core::map::LosMap,
+};
 
 // 分隔器
 // input_command 是输入的指令
@@ -38,7 +45,41 @@ pub fn parser(input_command: &str) -> LosCommand {
 
         "save" => LosCommand::SAVE,
 
-        "status" | "s" => LosCommand::STATUS,
+        "status" | "s" => {
+            if number > 2 {
+                return error_use("status");
+            }
+            if number == 1 {
+                return LosCommand::STATUS {
+                    mode: ExeStatusMode::ALL,
+                };
+            } else {
+                match parts.next() {
+                    Some(dest) => {
+                        if dest == "u" {
+                            return LosCommand::STATUS {
+                                mode: ExeStatusMode::HUNGRY,
+                            };
+                        } else if dest == "h" {
+                            return LosCommand::STATUS {
+                                mode: ExeStatusMode::HEALTH,
+                            };
+                        } else if dest == "m" {
+                            return LosCommand::STATUS {
+                                mode: ExeStatusMode::MENTAL,
+                            };
+                        } else if dest.parse::<i64>().is_ok() {
+                            return LosCommand::STATUS {
+                                mode: ExeStatusMode::BYENTITY,
+                            };
+                        } else {
+                            return LosCommand::UNKNOWN("不合法的status第二个参数".to_string());
+                        }
+                    }
+                    None => LosCommand::UNKNOWN("status's args".to_string()),
+                }
+            }
+        }
 
         "time" | "t" => LosCommand::TIME,
 
