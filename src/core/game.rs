@@ -5,16 +5,9 @@ use std::{
 };
 
 use crate::{
-    command::{parser::parser, router::router},
-    component::{LosHealth, LosHungry, LosMental, LosPosition},
-    constants::{constant_class::GameState, constant_str},
-    core::{
-        data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
-        map::LosMap,
-        time::LosTime,
-        world::{LosEntity, LosWorld},
-    },
-    entity::player::LosPlayer,
+    command::{parser::parser, router::router}, component::{LosHealth, LosHungry, LosMental, LosPosition}, constants::{constant_class::{GameState, UpdateFuncType}, constant_str}, core::{
+        data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime}, map::LosMap, register::{LosFuncRegister, RegisteredFunc}, time::LosTime, world::{LosEntity, LosWorld},
+    }, entity::player::LosPlayer,
 };
 
 use colored::*;
@@ -24,6 +17,7 @@ pub struct LosGame {
     pub l_world: LosWorld,
     pub l_time: LosTime,
     pub l_player: LosEntity,
+    pub l_register: LosFuncRegister,
     l_running: bool,
     l_has_save_data: bool, // 是不是有存档
     l_game_state: GameState,
@@ -40,12 +34,15 @@ impl LosGame {
                 let mut world = LosWorld::new();
                 let player = LosPlayer::spawn(&mut world);
                 let time = LosTime::new();
+                let mut register = LosFuncRegister::new();
+                LosPlayer::register_func(&mut register, player);
                 Self {
                     l_world: world,
                     l_player: player,
                     l_running: true,
                     l_time: time,
                     l_has_save_data: false,
+                    l_register: register,
                     l_game_state: GameState::MainMenu,
                 }
             }
@@ -188,9 +185,12 @@ impl LosGame {
         world.l_map = map;
         let player = LosPlayer::from_save_data(&save_data.l_player, &mut world);
         let time = LosTime::from_save_data(&save_data.l_time);
+        let mut register = LosFuncRegister::new();
+        LosPlayer::register_func(&mut register, player);
         Ok(Self {
             l_world: world,
             l_player: player,
+            l_register: register,
             l_running: true,
             l_has_save_data: true,
             l_time: time,
@@ -202,7 +202,7 @@ impl LosGame {
     fn _playing(&mut self) {
         let elasped_minute = self.l_time.update();
         self._update(elasped_minute);
-      
+
         print!("> ");
         if let Err(error) = io::stdout().flush() {
             eprintln!("数据刷新失败! {}", error);
@@ -289,6 +289,10 @@ impl LosGame {
 
                 self.l_world = world;
                 self.l_player = player;
+
+                self.l_register = LosFuncRegister::new();
+                LosPlayer::register_func(&mut self.l_register, player);
+                self.l_time = LosTime::new();
                 self.l_game_state = GameState::Playing;
             }
 
@@ -299,6 +303,7 @@ impl LosGame {
                     match Self::load() {
                         Ok(loaded_game) => {
                             *self = loaded_game;
+                            self.l_time.resume();
                             self.l_game_state = GameState::Playing;
                             println!("{}", "✓ 存档加载成功".green());
                         }
@@ -329,18 +334,30 @@ impl LosGame {
         }
     }
 
-    fn _settings(&mut self) {}
+    fn _settings(&mut self) {
+        // 设置功能尚未实现，提示后返回主菜单（避免空实现导致状态机死循环）
+        println!("{}", "设置功能开发中...".yellow());
+        self.l_game_state = GameState::MainMenu;
+    }
 
     fn _loading(&mut self) {}
 
-    fn _update(&mut self, elasped_minute: f64) {
-        if elasped_minute == 0.0 {
+    fn _update(&mut self, elapsed_minutes: f64) {
+        if elapsed_minutes <= 0.0 {
             return;
         }
-        for type_id in self.l_world.l_updatable_types.clone()
-        {
-            // 每一个 类型
-            
+        let funcs = self.l_register.get_by_func_type(UpdateFuncType::ByTime);
+        let mut events = Vec::new();
+        for (entity, func) in funcs {
+            match func {
+                RegisteredFunc::ByTime(f) => {
+                    events.extend(f(&mut self.l_world, entity, elapsed_minutes));
+                }
+            }
+        }
+        
+        for ev in events {
+            println!("[event] {ev:?}");
         }
     }
 }

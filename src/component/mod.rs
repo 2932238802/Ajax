@@ -5,7 +5,6 @@ pub mod health;
 pub mod position;
 pub mod hungry;
 pub mod mental;
-pub mod update_able;
 
 pub use health::LosHealth;
 pub use position::LosPosition;

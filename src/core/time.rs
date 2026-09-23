@@ -1,5 +1,5 @@
 // 时间
-// 能够随着系统时间的流逝而流逝 现实生活中 1 秒钟 等于 游戏时间的  2分钟 （也是24小时）
+// 现实时间会推动游戏时间流逝，比例由 DEFAULT_TIME_MULTY 决定（当前 1 秒 ≈ 0.8 游戏分钟）
 // 然后 比如一些耗时动作 开采一个矿物 休息片刻 钓鱼 这些我又不希望 真的阻塞
 // 比如休息半小时 也就是现实中15秒(也就是游戏里面的半小时) 15分钟的等待显然是不太好的游戏体验。 这里只需要播放一个打印动画 就可以了(暂停 系统流逝 但是 播放完毕了 加上这个时长)
 // 用一个任务队列来实现，比如现实每经过 5 秒钟 给 任务队列 推入 一个 tick(也就是游戏中10分钟)
@@ -20,6 +20,7 @@ use std::{print, println, thread};
 #[derive(Debug, Clone)]
 pub struct LosTime {
     l_game_minutes: u64,    // 游戏进行的分钟 会 加时段 也会随着 系统进行更新
+    l_minute_carry: f64,    // 累积不足 1 分钟的小数部分，避免整数截断导致时间停滞
     l_last_update: Instant, // 上一次 更新的时间
     l_paused: bool,         // 现在是不是暂停的
 }
@@ -29,6 +30,7 @@ impl LosTime {
     pub fn new() -> Self {
         Self {
             l_game_minutes: 0,
+            l_minute_carry: 0.0,
             l_last_update: Instant::now(),
             l_paused: false,
         }
@@ -38,6 +40,7 @@ impl LosTime {
     pub fn from_save_data(minute: &SaveTime) -> Self {
         Self {
             l_game_minutes: minute.l_elasped,
+            l_minute_carry: 0.0,
             l_last_update: Instant::now(),
             l_paused: false,
         }
@@ -69,13 +72,15 @@ impl LosTime {
             return 0.0;
         }
         let now = Instant::now(); // 此刻
-        let elaspe = now.duration_since(self.l_last_update);
-        let seconds = elaspe.as_secs();
-        let mut minuted_elaspe = 0.0;
-        if seconds > 0 {
-            minuted_elaspe = seconds as f64 * DEFAULT_TIME_MULTY;
-            self.l_game_minutes += minuted_elaspe as u64;
-            self.l_last_update += std::time::Duration::from_secs(seconds);
+        let elapsed = now.duration_since(self.l_last_update);
+        self.l_last_update = now;
+        let minuted_elaspe = elapsed.as_secs_f64() * DEFAULT_TIME_MULTY;
+        if minuted_elaspe > 0.0 {
+            self.l_minute_carry += minuted_elaspe;
+            let whole_minutes = self.l_minute_carry.trunc();
+            self.l_game_minutes += whole_minutes as u64;
+            self.l_minute_carry -= whole_minutes;
+            // l_last_update 已在上面更新
         }
         minuted_elaspe
     }

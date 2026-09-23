@@ -34,9 +34,9 @@ pub fn status(game: &mut LosGame, mode: ExeStatusMode) {
         ExeStatusMode::ALL => {
             let s = format!(
                 r#"
-health: {} 
-hungry: {}
-mental: {}
+health: {:.1} 
+hungry: {:.1}
+mental: {:.1}
 "#,
                 health.l_current, hungry.l_current, mental.l_current
             );

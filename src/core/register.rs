@@ -24,7 +24,7 @@ impl RegisteredFunc {
 
 pub struct LosFuncRegister {
     _l_entity_funcs: HashMap<(LosEntity, UpdateFuncType), Vec<RegisteredFunc>>,
-    _l_type_funcs: HashMap<UpdateFuncType, Vec<(LosEntity, UpdateFuncType)>>,
+    _l_type_funcs: HashMap<UpdateFuncType, Vec<(LosEntity, RegisteredFunc)>>,
 }
 
 impl LosFuncRegister {
@@ -45,13 +45,24 @@ impl LosFuncRegister {
         self._l_type_funcs
             .entry(func_type)
             .or_insert_with(Vec::new)
-            .push((entity, func_type));
+            .push((entity, func));
     }
 
     pub fn get_by_func_type(&self, func_type: UpdateFuncType) -> Vec<(LosEntity, &RegisteredFunc)> {
         self._l_type_funcs
             .get(&func_type)
             .map(|funcs| funcs.iter().map(|(entity, func)| (*entity, func)).collect())
+            .unwrap_or_default()
+    }
+
+    pub fn get_by_entity_and_type(
+        &self,
+        entity: LosEntity,
+        func_type: UpdateFuncType,
+    ) -> Vec<&RegisteredFunc> {
+        self._l_entity_funcs
+            .get(&(entity, func_type))
+            .map(|funcs| funcs.iter().collect())
             .unwrap_or_default()
     }
 }

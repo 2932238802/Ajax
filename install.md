@@ -47,6 +47,7 @@ src/
     └── schedule.rs
 
 
+<<<<<<< Updated upstream
 - Fn 
     - Fn 是一个 trait，表示可以像函数一样调用的类型
 - fn
@@ -86,3 +87,5 @@ src/
         - 大小不确定，通常需要 Box<dyn Fn(...)> 或泛型
         - 可以捕获环境
     - 
+=======
+>>>>>>> Stashed changes
