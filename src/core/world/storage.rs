@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{any::Any, collections::HashMap};
 
 use crate::core::world::LosEntity;
 
@@ -32,6 +32,20 @@ impl<T> LosStorage<T> {
     pub fn get_mut(&mut self, entity: LosEntity) -> Option<&mut T> {
         self._l_data.get_mut(&entity)
     }
+}
 
+// 
+impl<T: 'static> LosStorage<T> {
+    // 擦除 entity
+    pub fn remove(&mut self, entity: LosEntity) {
+        self._l_data.remove(&entity);
+    }
 
+    pub fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    pub fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
+    }
 }
