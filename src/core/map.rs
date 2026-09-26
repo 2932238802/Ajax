@@ -183,7 +183,6 @@ impl LosMap {
             LT_PLAINS,
             LT_RIVER,
             LT_SWAMP,
-            MAP_TITLE,
         ]
         .contains(&place)
     }

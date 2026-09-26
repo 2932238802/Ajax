@@ -34,7 +34,6 @@ impl<T> LosStorage<T> {
     }
 }
 
-// 
 impl<T: 'static> LosStorage<T> {
     // 擦除 entity
     pub fn remove(&mut self, entity: LosEntity) {

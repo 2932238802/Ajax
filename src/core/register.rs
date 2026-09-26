@@ -23,7 +23,13 @@ impl RegisteredFunc {
 }
 
 pub struct LosFuncRegister {
+    // 通过 entity 以及 想要找到更新的函数的类型 找到对应的业务函数
+    // 比如进食
+    // 比如战斗
     _l_entity_funcs: HashMap<(LosEntity, UpdateFuncType), Vec<RegisteredFunc>>,
+
+    // 通过 更新的类型 拿到 entity 以及 对应的业务函数
+    // 比如时间更新 比如 物质生产
     _l_type_funcs: HashMap<UpdateFuncType, Vec<(LosEntity, RegisteredFunc)>>,
 }
 
@@ -55,6 +61,10 @@ impl LosFuncRegister {
             .unwrap_or_default()
     }
 
+    // 进食 战斗
+    // 需要拿到 食物的更新函数
+    // entity 物品 的 entity
+    // func_type 物品的功能
     pub fn get_by_entity_and_type(
         &self,
         entity: LosEntity,
@@ -64,5 +74,14 @@ impl LosFuncRegister {
             .get(&(entity, func_type))
             .map(|funcs| funcs.iter().collect())
             .unwrap_or_default()
+    }
+
+    // 移除 对应 entity 的所有函数
+    pub fn remove_entity(&mut self, entity: LosEntity) {
+        self._l_entity_funcs.retain(|(e, _), _| *e != entity); // 保留 不是 entity 的 也就是 删掉 所有的 entity
+                                                               // _l_type_funcs: HashMap<UpdateFuncType, Vec<(LosEntity, RegisteredFunc)>>,
+        for right in self._l_type_funcs.values_mut() {
+            right.retain(|(e, _)| *e != entity);
+        }
     }
 }
