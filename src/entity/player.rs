@@ -100,7 +100,6 @@ impl LosPlayer {
     }
 }
 
-
 struct HealthDecay;
 
 impl LosBehavior for HealthDecay {

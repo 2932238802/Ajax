@@ -13,7 +13,7 @@ pub struct SaveData {
 // 个人的信息
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SavePlayer {
-    pub l_entity_id: u32,
+    pub l_entity_id: i32,
     pub l_position: LosPosition,
     pub l_state: SaveState,
 }

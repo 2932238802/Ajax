@@ -4,7 +4,8 @@ use crate::core::{
 };
 
 // 实体行为
-// 一个实体可以挂载多个行为；行为只需实现自己关心的钩子，其余用默认空实现
+// 一个实体可以挂载多个行为
+// 行为只需实现自己关心的钩子，其余用默认空实现
 pub trait LosBehavior {
     // 随时间推进触发（elapsed 单位：游戏分钟）
     fn on_time(&self, _world: &mut LosWorld, _entity: LosEntity, _elapsed: f64) -> Vec<LosEvent> {
