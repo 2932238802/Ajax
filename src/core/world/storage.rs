@@ -9,6 +9,12 @@ pub struct LosStorage<T> {
     _l_data: HashMap<LosEntity, T>,
 }
 
+pub trait LosErasedStorage {
+    fn remove_entity(&mut self, entity: LosEntity);
+    fn as_any(&self) -> &dyn Any;
+    fn as_any_mut(&mut self) -> &mut dyn Any;
+}
+
 // 读取 存储
 impl<T> LosStorage<T> {
     // new
@@ -34,17 +40,14 @@ impl<T> LosStorage<T> {
     }
 }
 
-impl<T: 'static> LosStorage<T> {
-    // 擦除 entity
-    pub fn remove(&mut self, entity: LosEntity) {
+impl<T: 'static> LosErasedStorage for LosStorage<T> {
+    fn remove_entity(&mut self, entity: LosEntity) {
         self._l_data.remove(&entity);
     }
-
-    pub fn as_any(&self) -> &dyn Any {
+    fn as_any(&self) -> &dyn Any {
         self
     }
-
-    pub fn as_any_mut(&mut self) -> &mut dyn Any {
+    fn as_any_mut(&mut self) -> &mut dyn Any {
         self
     }
 }

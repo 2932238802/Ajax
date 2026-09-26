@@ -1,13 +1,27 @@
 use std::{
+    collections::VecDeque,
     eprintln, fs,
     io::{self, Write},
     print, println,
 };
 
 use crate::{
-    command::{parser::parser, router::router}, component::{LosHealth, LosHungry, LosMental, LosPosition}, constants::{constant_class::{GameState, UpdateFuncType}, constant_str}, core::{
-        data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime}, map::LosMap, register::{LosFuncRegister, RegisteredFunc}, time::LosTime, world::{LosEntity, LosWorld},
-    }, entity::player::LosPlayer,
+    command::{parser::parser, router::router},
+    component::{LosHealth, LosHungry, LosMental, LosPosition},
+    constants::{
+        constant_class::GameState,
+        constant_str,
+    },
+    core::{
+        data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
+        event::LosEvent,
+        map::LosMap,
+        register::LosFuncRegister,
+        time::LosTime,
+        update::LosUpdate,
+        world::{LosEntity, LosWorld},
+    },
+    entity::player::LosPlayer,
 };
 
 use colored::*;
@@ -18,9 +32,10 @@ pub struct LosGame {
     pub l_time: LosTime,
     pub l_player: LosEntity,
     pub l_register: LosFuncRegister,
-    l_running: bool,
-    l_has_save_data: bool, // 是不是有存档
-    l_game_state: GameState,
+    _l_events: VecDeque<LosEvent>,
+    _l_running: bool,
+    _l_has_save_data: bool, // 是不是有存档
+    _l_game_state: GameState,
 }
 
 // 输入输出循环
@@ -32,18 +47,18 @@ impl LosGame {
             Ok(game) => game,
             Err(_) => {
                 let mut world = LosWorld::new();
-                let player = LosPlayer::spawn(&mut world);
-                let time = LosTime::new();
                 let mut register = LosFuncRegister::new();
-                LosPlayer::register_func(&mut register, player);
+                let player = LosPlayer::spawn(&mut world, &mut register);
+                let time = LosTime::new();
                 Self {
                     l_world: world,
                     l_player: player,
-                    l_running: true,
                     l_time: time,
-                    l_has_save_data: false,
                     l_register: register,
-                    l_game_state: GameState::MainMenu,
+                    _l_events: VecDeque::new(),
+                    _l_running: true,
+                    _l_has_save_data: false,
+                    _l_game_state: GameState::MainMenu,
                 }
             }
         }
@@ -54,8 +69,8 @@ impl LosGame {
     pub fn run(&mut self) {
         println!("{}", constant_str::WELCOME_STR);
 
-        while self.l_running {
-            match self.l_game_state {
+        while self._l_running {
+            match self._l_game_state {
                 GameState::Loading => {
                     self._loading();
                 }
@@ -73,7 +88,7 @@ impl LosGame {
                 }
 
                 GameState::Exit => {
-                    self.l_running = false;
+                    self._l_running = false;
                 }
             }
         }
@@ -82,7 +97,7 @@ impl LosGame {
 
     // 退出游戏
     pub fn exit(&mut self) {
-        self.l_game_state = GameState::Exit;
+        self._l_game_state = GameState::Exit;
     }
 
     // 保存游戏
@@ -183,18 +198,18 @@ impl LosGame {
         let map = LosMap::from_save_data(&save_data.l_map);
         let mut world = LosWorld::new();
         world.l_map = map;
-        let player = LosPlayer::from_save_data(&save_data.l_player, &mut world);
         let time = LosTime::from_save_data(&save_data.l_time);
         let mut register = LosFuncRegister::new();
-        LosPlayer::register_func(&mut register, player);
+        let player = LosPlayer::from_save_data(&save_data.l_player, &mut world, &mut register);
         Ok(Self {
             l_world: world,
             l_player: player,
             l_register: register,
-            l_running: true,
-            l_has_save_data: true,
             l_time: time,
-            l_game_state: GameState::MainMenu,
+            _l_events: VecDeque::new(),
+            _l_running: true,
+            _l_has_save_data: true,
+            _l_game_state: GameState::MainMenu,
         })
     }
 
@@ -217,7 +232,7 @@ impl LosGame {
     }
 
     fn _mainmenu(&mut self) {
-        let has_save = self.l_has_save_data;
+        let has_save = self._l_has_save_data;
 
         println!();
         println!("{}", "═══════════════════════════".cyan().bold());
@@ -275,7 +290,7 @@ impl LosGame {
         let mut input = String::new();
         if let Err(error) = io::stdin().read_line(&mut input) {
             eprintln!("{}", format!("读取输入失败: {error}").red());
-            self.l_game_state = GameState::Exit;
+            self._l_game_state = GameState::Exit;
             return;
         }
 
@@ -285,15 +300,14 @@ impl LosGame {
 
                 // 创建新游戏
                 let mut world = LosWorld::new();
-                let player = LosPlayer::spawn(&mut world);
+                self.l_register = LosFuncRegister::new();
+                let player = LosPlayer::spawn(&mut world, &mut self.l_register);
 
                 self.l_world = world;
                 self.l_player = player;
 
-                self.l_register = LosFuncRegister::new();
-                LosPlayer::register_func(&mut self.l_register, player);
                 self.l_time = LosTime::new();
-                self.l_game_state = GameState::Playing;
+                self._l_game_state = GameState::Playing;
             }
 
             "2" => {
@@ -304,7 +318,7 @@ impl LosGame {
                         Ok(loaded_game) => {
                             *self = loaded_game;
                             self.l_time.resume();
-                            self.l_game_state = GameState::Playing;
+                            self._l_game_state = GameState::Playing;
                             println!("{}", "✓ 存档加载成功".green());
                         }
                         Err(e) => {
@@ -317,7 +331,7 @@ impl LosGame {
             }
             "3" => {
                 println!("{}", "→ 进入设置".blue());
-                self.l_game_state = GameState::Settings;
+                self._l_game_state = GameState::Settings;
             }
             "4" => {
                 println!("{}", "→ 查看成就".magenta());
@@ -326,7 +340,7 @@ impl LosGame {
             "5" => {
                 println!("{}", "→ 正在退出...".red());
                 // self.save(); 推出 就是
-                self.l_game_state = GameState::Exit;
+                self._l_game_state = GameState::Exit;
             }
             _ => {
                 println!("{}", format!("✗ 无效选项: '{}'", input.trim()).red());
@@ -337,7 +351,7 @@ impl LosGame {
     fn _settings(&mut self) {
         // 设置功能尚未实现，提示后返回主菜单（避免空实现导致状态机死循环）
         println!("{}", "设置功能开发中...".yellow());
-        self.l_game_state = GameState::MainMenu;
+        self._l_game_state = GameState::MainMenu;
     }
 
     fn _loading(&mut self) {}
@@ -346,18 +360,19 @@ impl LosGame {
         if elapsed_minutes <= 0.0 {
             return;
         }
-        let funcs = self.l_register.get_by_func_type(UpdateFuncType::ByTime);
-        let mut events = Vec::new();
-        for (entity, func) in funcs {
-            match func {
-                RegisteredFunc::ByTime(f) => {
-                    events.extend(f(&mut self.l_world, entity, elapsed_minutes));
-                }
+        let events =
+            LosUpdate::update_by_time(&self.l_register, &mut self.l_world, elapsed_minutes);
+        self._l_events.extend(events);
+        self._drain_events();
+    }
+
+    // 处理 事情
+    fn _drain_events(&mut self) {
+        while let Some(ev) = self._l_events.pop_front() {
+            match &ev {
+                LosEvent::Death { .. } => println!("{}", format!("☠ {ev}").red().bold()),
+                LosEvent::OnTheVerge { .. } => println!("{}", format!("⚠ {ev}").yellow()),
             }
-        }
-        
-        for ev in events {
-            println!("[event] {ev:?}");
         }
     }
 }

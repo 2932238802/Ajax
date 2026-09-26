@@ -1,8 +1,11 @@
+pub mod behavior;
 pub mod data;
+pub mod event;
 pub mod game;
 pub mod map;
+pub mod register;
 pub mod terrain;
 pub mod time;
+pub mod update;
 pub mod world;
-pub mod event;
-pub mod register;
+pub mod item;

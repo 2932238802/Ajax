@@ -11,5 +11,5 @@
 )]
 pub struct LosEntity
 {
-    pub l_id:u32
+    pub l_id:i32
 }

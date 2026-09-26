@@ -9,14 +9,14 @@ use crate::{
     core::{
         event::LosEvent,
         map::LosMap,
-        world::{LosEntity, LosStorage},
+        world::{storage::LosErasedStorage, LosEntity, LosStorage},
     },
 };
 
 pub struct LosWorld {
     pub l_map: LosMap,
-    _l_next_entity_id: u32,
-    _l_storages: HashMap<TypeId, Box<dyn Any>>,
+    _l_next_entity_id: i32,
+    _l_storages: HashMap<TypeId, Box<dyn LosErasedStorage>>,
 }
 impl LosWorld {
     pub fn new() -> Self {
@@ -29,8 +29,6 @@ impl LosWorld {
             _l_storages: HashMap::new(), // _l_health_storage: LosStorage<LosHealth>::new(),
         }
     }
-
-
 
     // 返回一个 entity
     pub fn spawn(&mut self) -> LosEntity {
@@ -52,7 +50,10 @@ impl LosWorld {
             ._l_storages
             .entry(type_id)
             .or_insert_with(|| Box::new(LosStorage::<T>::new()));
-        let storage = storage.downcast_mut::<LosStorage<T>>().expect("类型不匹配");
+        let storage = storage
+            .as_any_mut()
+            .downcast_mut::<LosStorage<T>>()
+            .expect("类型不匹配");
         storage.insert(entity, component);
     }
 
@@ -61,6 +62,7 @@ impl LosWorld {
         let type_id = TypeId::of::<T>();
         self._l_storages
             .get(&type_id)?
+            .as_any()
             .downcast_ref::<LosStorage<T>>()
             .expect("类型不匹配")
             .get(entity)
@@ -79,8 +81,31 @@ impl LosWorld {
         let type_id = TypeId::of::<T>();
         self._l_storages
             .get_mut(&type_id)?
+            .as_any_mut()
             .downcast_mut::<LosStorage<T>>()
             .expect("类型不匹配")
             .get_mut(entity)
+    }
+
+    // 判断一个 entity 的 类型有没有
+    pub fn has_component<T: 'static>(&self, entity: LosEntity) -> bool {
+        self.get_component::<T>(entity).is_some()
+    }
+
+    // 删除 其中 一个 entity 的 属性
+    pub fn remove_component<T: 'static>(&mut self, entity: LosEntity) {
+        let type_id = TypeId::of::<T>();
+        if let Some(storage) = self._l_storages.get_mut(&type_id) {
+            if let Some(storage) = storage.as_any_mut().downcast_mut::<LosStorage<T>>() {
+                storage.remove_entity(entity);
+            }
+        }
+    }
+
+    // 删除掉 其中一个 entity
+    pub fn despawn(&mut self, entity: LosEntity) {
+        for storage in self._l_storages.values_mut() {
+            storage.remove_entity(entity);
+        }
     }
 }
