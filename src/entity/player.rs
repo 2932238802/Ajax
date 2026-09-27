@@ -1,10 +1,13 @@
-use std::rc::Rc;
+﻿use std::rc::Rc;
 
 use crate::{
     component::{inventory::LosInventory, LosHealth, LosHungry, LosMental, LosPosition},
     constants::constant_number::PLAYER_INVENTORY_CAPACITY,
     ecs::{LosEntity, LosWorld},
-    game::{event::{DeathEvent, LosEvent, OnTheVergeEvent}, save::SavePlayer},
+    game::{
+        event::{DeathEvent, LosEvent, OnTheVergeEvent},
+        save::SavePlayer,
+    },
     system::{LosBehavior, LosFuncRegister},
 };
 
@@ -71,11 +74,13 @@ impl LosPlayer {
                 l_position: data.l_position.l_position,
             },
         );
+        world.add_component(entity, LosInventory::new(PLAYER_INVENTORY_CAPACITY));
         Self::register_func(register, &entity);
         entity
     }
-}
 
+
+}
 
 struct HealthDecay;
 
