@@ -1,4 +1,4 @@
-use crate::core::terrain::LosTerrain;
+use crate::world::LosTerrain;
 use serde::{Deserialize, Serialize};
 
 // 位置

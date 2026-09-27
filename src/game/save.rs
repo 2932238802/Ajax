@@ -1,6 +1,5 @@
-use crate::{component::LosPosition, core::terrain::LosTerrain};
+use crate::{component::LosPosition, world::LosTerrain};
 use serde::{Deserialize, Serialize};
-use std::vec;
 
 // 存储的数据
 #[derive(Debug, Serialize, Deserialize)]
@@ -13,7 +12,7 @@ pub struct SaveData {
 // 个人的信息
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SavePlayer {
-    pub l_entity_id: u32,
+    pub l_entity_id: i32,
     pub l_position: LosPosition,
     pub l_state: SaveState,
 }
@@ -35,8 +34,12 @@ pub struct SaveTime {
 pub struct SaveState {
     pub l_cur_health: f64,
     pub l_health_max: f64,
+    pub l_hunger_damage_rate: f64,
+    pub l_mental_damage_rate: f64,
     pub l_cur_mental: f64,
     pub l_mental_max: f64,
+    pub l_mental_decay_rate: f64,
     pub l_cur_hungry: f64,
     pub l_hungry_max: f64,
+    pub l_hungry_decay_rate: f64,
 }

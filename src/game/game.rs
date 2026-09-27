@@ -8,20 +8,16 @@ use std::{
 use crate::{
     command::{parser::parser, router::router},
     component::{LosHealth, LosHungry, LosMental, LosPosition},
-    constants::{
-        constant_class::GameState,
-        constant_str,
-    },
-    core::{
-        data::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
-        event::LosEvent,
-        map::LosMap,
-        register::LosFuncRegister,
-        time::LosTime,
-        update::LosUpdate,
-        world::{LosEntity, LosWorld},
-    },
+    constants::{constant_class::GameState, constant_str},
+    ecs::{LosEntity, LosWorld},
     entity::player::LosPlayer,
+    game::{
+        event::LosEvent,
+        save::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
+        time::LosTime,
+    },
+    system::{LosFuncRegister, LosUpdate},
+    world::LosMap,
 };
 
 use colored::*;
@@ -134,10 +130,14 @@ impl LosGame {
                 l_state: SaveState {
                     l_cur_health: player_health_state.l_current,
                     l_health_max: player_health_state.l_max,
+                    l_hunger_damage_rate: player_health_state.l_hunger_damage_rate,
+                    l_mental_damage_rate: player_health_state.l_mental_damage_rate,
                     l_cur_hungry: player_hungry_state.l_current,
                     l_hungry_max: player_hungry_state.l_max,
+                    l_hungry_decay_rate: player_hungry_state.l_decay_rate,
                     l_cur_mental: player_mental_state.l_current,
                     l_mental_max: player_mental_state.l_max,
+                    l_mental_decay_rate: player_mental_state.l_decay_rate,
                 },
             },
 

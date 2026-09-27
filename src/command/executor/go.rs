@@ -1,6 +1,6 @@
 use crate::{
     component::LosPosition,
-    core::{game::LosGame, map::LosMap},
+    game::LosGame,
 };
 
 // 到达 一个 位置

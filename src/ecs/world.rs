@@ -1,16 +1,12 @@
-use std::{
-    any::{Any, TypeId},
-    collections::HashMap,
-    hash::Hash,
-};
+use std::{any::TypeId, collections::HashMap};
 
 use crate::{
     constants::constant_number,
-    core::{
-        event::LosEvent,
-        map::LosMap,
-        world::{storage::LosErasedStorage, LosEntity, LosStorage},
+    ecs::{
+        entity::LosEntity,
+        storage::{LosErasedStorage, LosStorage},
     },
+    world::LosMap,
 };
 
 pub struct LosWorld {

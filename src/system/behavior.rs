@@ -1,6 +1,6 @@
-use crate::core::{
-    event::LosEvent,
-    world::{LosEntity, LosWorld},
+use crate::{
+    ecs::{LosEntity, LosWorld},
+    game::event::LosEvent,
 };
 
 // 实体行为

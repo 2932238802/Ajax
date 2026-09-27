@@ -1,17 +1,12 @@
 use crate::{
     command::{
-        commands::commands::LosCommand,
+        command::LosCommand,
         executor::{
-            exit::exit,
-            go::go,
-            help::help,
-            save::save,
-            show_map::show_map,
-            status::{status, ExeStatusMode},
+            exit::exit, go::go, help::help, save::save, show_map::show_map, status::status,
             time::time,
         },
     },
-    core::game::LosGame,
+    game::LosGame,
 };
 
 // 指令路由器

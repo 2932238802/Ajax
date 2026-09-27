@@ -1,7 +1,7 @@
-use crate::core::{
-    event::LosEvent,
-    register::LosFuncRegister,
-    world::{LosEntity, LosWorld},
+use crate::{
+    ecs::{LosEntity, LosWorld},
+    game::event::LosEvent,
+    system::register::LosFuncRegister,
 };
 
 pub struct LosUpdate;

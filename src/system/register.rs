@@ -1,6 +1,6 @@
 use std::{collections::HashMap, rc::Rc};
 
-use crate::core::{behavior::LosBehavior, world::LosEntity};
+use crate::{ecs::LosEntity, system::behavior::LosBehavior};
 
 // 行为注册表
 // 为每个 entity 挂载若干行为（LosBehavior）

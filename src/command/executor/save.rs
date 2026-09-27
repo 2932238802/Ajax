@@ -1,6 +1,4 @@
-use std::println;
-
-use crate::core::game::LosGame;
+use crate::game::LosGame;
 
 // 保存
 pub fn save(game: &mut LosGame) {

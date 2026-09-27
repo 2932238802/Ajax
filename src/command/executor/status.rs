@@ -1,7 +1,7 @@
-use std::{format, print};
+use std::format;
 
 use crate::component::{LosHealth, LosHungry, LosMental};
-use crate::core::game::LosGame;
+use crate::game::LosGame;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum ExeStatusMode {

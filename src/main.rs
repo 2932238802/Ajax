@@ -1,13 +1,16 @@
 pub mod command;
 pub mod component;
 pub mod constants;
-pub mod core;
+pub mod ecs;
 pub mod entity;
+pub mod game;
+pub mod item;
 pub mod system;
+pub mod world;
 
-use crate::core::game::LosGame;
+use crate::game::LosGame;
 
 fn main() {
-    let mut g: core::game::LosGame = LosGame::new();
-    g.run();
+    let mut game = LosGame::new();
+    game.run();
 }

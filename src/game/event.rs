@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter, Result};
 
-use crate::core::world::LosEntity;
+use crate::ecs::LosEntity;
 
 #[derive(Debug)]
 pub enum LosEvent {

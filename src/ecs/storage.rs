@@ -1,6 +1,6 @@
 use std::{any::Any, collections::HashMap};
 
-use crate::core::world::LosEntity;
+use crate::ecs::entity::LosEntity;
 
 // 存储 全局的 Entity
 // 存储其中一个 T 的所有的 组件

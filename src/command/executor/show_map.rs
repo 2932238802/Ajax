@@ -1,6 +1,7 @@
 use crate::{
     component::LosPosition,
-    core::{game::LosGame, map::LosMap},
+    game::LosGame,
+    world::LosMap,
 };
 
 // 展示地图
