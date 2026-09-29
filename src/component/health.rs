@@ -10,6 +10,19 @@ pub struct LosHealth {
     pub l_mental_damage_rate: f64,
 }
 
+pub struct LosAlterHealthOnce {
+    pub l_min: f64,
+    pub l_max: f64,
+}
+
+// 持续影响
+pub struct LosAlterHealthConsistent {
+    pub l_min: f64,
+    pub l_max: f64,
+    pub l_times: usize,
+    pub l_interval: f64,
+}
+
 impl Default for LosHealth {
     fn default() -> Self {
         Self {

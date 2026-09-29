@@ -1,4 +1,5 @@
 use crate::{
+    component::apply_able::ApplyWays,
     ecs::{LosEntity, LosWorld},
     game::event::LosEvent,
 };
@@ -11,10 +12,17 @@ pub trait LosBehavior {
         Vec::new()
     }
 
-    // 被 使用 时触发
-    // user   : 使用者
-    // target : 被使用者（通常是自己）
-    fn on_use(&self, _world: &mut LosWorld, _user: LosEntity, _target: LosEntity) -> Vec<LosEvent> {
-        Vec::new()
+    // 动作交互统一抽象
+    // 返回 Option<Vec<LosEvent>>:
+    // - None: 该 Behavior 不响应该 way 操作
+    // - Some(events): 成功响应并返回产生的事件
+    fn on_apply(
+        &self,
+        _world: &mut LosWorld,
+        _actor: LosEntity,
+        _target: LosEntity,
+        _way: ApplyWays,
+    ) -> Option<Vec<LosEvent>> {
+        None
     }
 }

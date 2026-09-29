@@ -1,5 +1,9 @@
 use crate::{
-    command::{command::LosCommand, executor::status::ExeStatusMode},
+    command::{
+        command::{LosCommand, UseTarget},
+        executor::status::ExeStatusMode,
+    },
+    component::apply_able::ApplyWays,
     world::LosMap,
 };
 
@@ -16,21 +20,6 @@ pub fn parser(input_command: &str) -> LosCommand {
         Some(command) => command.to_lowercase(),
         None => return LosCommand::UNKNOWN(String::new()),
     };
-
-    // #[derive(Debug, Clone, PartialEq)]
-    // pub enum LosCommand {
-    //     EXIT, // 退出游戏 quit
-    //     HELP, //
-    //     STOP, // 游戏暂停
-    //     SAVE, // 游戏保存
-
-    //     STATUS, // 状态指令
-    //     TIME,               // 时间指令
-    //     MAP,                // 打印地图
-    //     GO { des: String }, // 前往指令
-
-    //     UNKNOWN(String),
-    // }
 
     match command.as_str() {
         "quit" | "exit" | "q" => LosCommand::EXIT,
@@ -81,6 +70,26 @@ pub fn parser(input_command: &str) -> LosCommand {
 
         "map" | "m" => LosCommand::MAP,
 
+        "use" | "apply" | "us" | "u" => {
+            let target_str = match parts.next() {
+                Some(t) => t,
+                None => return error_use("use"),
+            };
+
+            let target = if let Ok(id) = target_str.parse::<i64>() {
+                UseTarget::ById(id)
+            } else {
+                UseTarget::ByName(target_str.to_lowercase())
+            };
+
+            let way = parts.next().and_then(|w| match w.to_lowercase().as_str() {
+                "eat" | "e" => Some(ApplyWays::EAT),
+                "give" | "g" => Some(ApplyWays::GIVE),
+                _ => None,
+            });
+
+            LosCommand::USE { target, way }
+        }
         "go" | "g" => {
             if number != 2 {
                 return error_use("go");

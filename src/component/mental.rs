@@ -12,6 +12,20 @@ pub struct LosMental {
     pub l_verge_threshold: f64,
 }
 
+// 影响一次
+pub struct LosAlterMentalOnce {
+    pub l_min: f64,
+    pub l_max: f64,
+}
+
+// 持续影响
+pub struct LosAlterMentalConsistent {
+    pub l_min: f64,
+    pub l_max: f64,
+    pub l_times: usize,
+    pub l_interval: f64,
+}
+
 impl Default for LosMental {
     fn default() -> Self {
         Self {

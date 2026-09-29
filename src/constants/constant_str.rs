@@ -10,7 +10,7 @@ Ajax(made by LosAngelous)
 5. 退出游戏
 ========================
 "#;
-pub const MAP_TITLE: &str = "Los Map";
+pub const MAP_TITLE: &str = "L`os Map";
 pub const LT_HOME: &str = "H"; // 家
 pub const LT_FOREST: &str = "L"; // 林
 pub const LT_PLAINS: &str = "Y"; // 平原

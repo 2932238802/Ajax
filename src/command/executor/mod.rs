@@ -5,3 +5,4 @@ pub mod show_map;
 pub mod go;
 pub mod time;
 pub mod status;
+pub mod apply;

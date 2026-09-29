@@ -11,7 +11,7 @@ use crate::{
 
 pub struct LosWorld {
     pub l_map: LosMap,
-    _l_next_entity_id: i32,
+    _l_next_entity_id: i64,
     _l_storages: HashMap<TypeId, Box<dyn LosErasedStorage>>,
 }
 impl LosWorld {

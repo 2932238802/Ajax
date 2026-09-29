@@ -1,3 +1,5 @@
+use crate::component::apply_able::ApplyWays;
+
 #[derive(Debug, Hash, Clone, PartialEq, Eq, Copy)]
 pub enum LosItem {
     Apple, // 苹果
@@ -25,6 +27,20 @@ impl LosItem {
             "apple" => Some(LosItem::Apple),
             "berry" => Some(LosItem::Berry),
             _ => None,
+        }
+    }
+
+    pub fn can_apply(&self, way: ApplyWays) -> bool {
+        match self {
+            LosItem::Apple => matches!(way, ApplyWays::EAT | ApplyWays::GIVE),
+            LosItem::Berry => matches!(way, ApplyWays::EAT),
+        }
+    }
+
+    pub fn get_apply_ways(&self) -> &'static [ApplyWays] {
+        match self {
+            LosItem::Apple => &[ApplyWays::EAT, ApplyWays::GIVE],
+            LosItem::Berry => &[ApplyWays::EAT],
         }
     }
 }

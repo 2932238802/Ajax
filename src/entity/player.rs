@@ -4,11 +4,14 @@ use crate::{
     component::{inventory::LosInventory, LosHealth, LosHungry, LosMental, LosPosition},
     constants::constant_number::PLAYER_INVENTORY_CAPACITY,
     ecs::{LosEntity, LosWorld},
-    game::{
-        event::{DeathEvent, LosEvent, OnTheVergeEvent},
-        save::SavePlayer,
+    game::save::SavePlayer,
+    system::{
+        behavior::{
+            health_behavior::HealthBehavior, hungry_behavior::HungerBehavior,
+            mental_behavior::MentalBehavior,
+        },
+        LosFuncRegister,
     },
-    system::{LosBehavior, LosFuncRegister},
 };
 
 // 提供一个静态函数
@@ -35,9 +38,9 @@ impl LosPlayer {
 
     // 给玩家挂载行为
     pub fn register_func(register: &mut LosFuncRegister, entity: &LosEntity) {
-        register.attach(*entity, Rc::new(HealthDecay));
-        register.attach(*entity, Rc::new(HungerDecay));
-        register.attach(*entity, Rc::new(MentalDecay));
+        register.attach(*entity, Rc::new(HealthBehavior));
+        register.attach(*entity, Rc::new(HungerBehavior));
+        register.attach(*entity, Rc::new(MentalBehavior));
     }
 
     // 从 保存的数据里 来
@@ -77,75 +80,5 @@ impl LosPlayer {
         world.add_component(entity, LosInventory::new(PLAYER_INVENTORY_CAPACITY));
         Self::register_func(register, &entity);
         entity
-    }
-
-
-}
-
-struct HealthDecay;
-
-impl LosBehavior for HealthDecay {
-    fn on_time(&self, world: &mut LosWorld, entity: LosEntity, elapsed: f64) -> Vec<LosEvent> {
-        let mut events = Vec::new();
-        let starving = world
-            .get_component::<LosHungry>(entity)
-            .map(|h| h.l_current < h.l_starving_threshold)
-            .unwrap_or(false);
-        let broken = world
-            .get_component::<LosMental>(entity)
-            .map(|m| m.l_current < m.l_broken_threshold)
-            .unwrap_or(false);
-        if let Some(health) = world.get_component_mut::<LosHealth>(entity) {
-            if starving {
-                health.l_current -= health.l_hunger_damage_rate * elapsed;
-            }
-            if broken {
-                health.l_current -= health.l_mental_damage_rate * elapsed;
-            }
-            if health.l_current <= 0.0 {
-                events.push(LosEvent::Death {
-                    entity,
-                    cause: DeathEvent::Starvation,
-                });
-            }
-        }
-        events
-    }
-}
-
-struct HungerDecay;
-
-impl LosBehavior for HungerDecay {
-    fn on_time(&self, world: &mut LosWorld, entity: LosEntity, elapsed: f64) -> Vec<LosEvent> {
-        let mut events = Vec::new();
-        if let Some(hungry) = world.get_component_mut::<LosHungry>(entity) {
-            hungry.l_current = (hungry.l_current - hungry.l_decay_rate * elapsed).max(0.0);
-            if hungry.l_current <= hungry.l_starving_threshold {
-                events.push(LosEvent::OnTheVerge {
-                    entity,
-                    cause: OnTheVergeEvent::HungryOnTheVerge,
-                });
-            }
-        }
-        events
-    }
-}
-
-// 精神：随时间下降
-struct MentalDecay;
-
-impl LosBehavior for MentalDecay {
-    fn on_time(&self, world: &mut LosWorld, entity: LosEntity, elapsed: f64) -> Vec<LosEvent> {
-        let mut events = Vec::new();
-        if let Some(mental) = world.get_component_mut::<LosMental>(entity) {
-            mental.l_current = (mental.l_current - mental.l_decay_rate * elapsed).max(0.0);
-            if mental.l_current <= mental.l_verge_threshold {
-                events.push(LosEvent::OnTheVerge {
-                    entity,
-                    cause: OnTheVergeEvent::MentalOnTheVerge,
-                });
-            }
-        }
-        events
     }
 }

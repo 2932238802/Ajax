@@ -1,3 +1,5 @@
-pub mod player;
 pub mod apple;
-pub mod kind;
+pub mod berry;
+pub mod entity_factory;
+pub mod item;
+pub mod player;

@@ -375,4 +375,9 @@ impl LosGame {
             }
         }
     }
+
+    // 拓展事件
+    fn extend_things(&mut self, events: Vec<LosEvent>) {
+        self._l_events.extend(events);
+    }
 }

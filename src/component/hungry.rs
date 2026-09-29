@@ -10,6 +10,20 @@ pub struct LosHungry {
     pub l_starving_threshold: f64,
 }
 
+// 影响一次饥饿
+pub struct LosAlterHungryOnce {
+    pub l_min: f64,
+    pub l_max: f64,
+}
+
+// 持续影响饥饿度
+pub struct LosAlterHungryConsistent {
+    pub l_min: f64,
+    pub l_max: f64,
+    pub l_times: usize,
+    pub l_interval: f64,
+}
+
 impl Default for LosHungry {
     fn default() -> Self {
         Self {

@@ -2,8 +2,8 @@ use crate::{
     command::{
         command::LosCommand,
         executor::{
-            exit::exit, go::go, help::help, save::save, show_map::show_map, status::status,
-            time::time,
+            apply::apply, exit::exit, go::go, help::help, save::save, show_map::show_map,
+            status::status, time::time,
         },
     },
     game::LosGame,
@@ -30,6 +30,10 @@ pub fn router(command: LosCommand, game: &mut LosGame) {
         }
         LosCommand::MAP => {
             show_map(game);
+        }
+
+        LosCommand::USE { target, way } => {
+            apply(game, target, way);
         }
 
         LosCommand::GO { des } => {
