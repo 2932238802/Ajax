@@ -1,8 +1,4 @@
-use crate::{
-    component::LosPosition,
-    game::LosGame,
-    world::LosMap,
-};
+use crate::{component::LosPosition, game::LosGame, world::LosMap};
 
 // 展示地图
 // 就是拿到 LosGame

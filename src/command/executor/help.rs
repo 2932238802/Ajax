@@ -1,9 +1,9 @@
 use std::println;
 
 // help 指令
-pub fn help()
-{
-    println!(r#"
+pub fn help() {
+    println!(
+        r#"
         exit
             => 退出游戏
 
@@ -23,5 +23,6 @@ pub fn help()
                 => 打印自己状态的 (详细) 信息
             -t -<thing id>
                 => 打印物品的信息    
-    "#)
+    "#
+    )
 }

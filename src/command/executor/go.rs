@@ -1,7 +1,4 @@
-use crate::{
-    component::LosPosition,
-    game::LosGame,
-};
+use crate::{component::LosPosition, game::LosGame};
 
 // 到达 一个 位置
 pub fn go(game: &mut LosGame, to_place: &str) {

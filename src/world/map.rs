@@ -10,7 +10,7 @@ use crate::{
     world::terrain::LosTerrain,
 };
 use colored::*;
-use rand::{RngExt};
+use rand::RngExt;
 
 pub struct LosMap {
     l_rows: usize,

@@ -1,4 +1,5 @@
 ﻿pub const EMPTINESS_ID: i64 = -3; // 虚空
+pub const NONE_ITEM_ID: i64 = -1; // 空
 
 pub const DEFAULT_WIDTH: usize = 11;
 pub const DEFAULT_HEIGHT: usize = 11;

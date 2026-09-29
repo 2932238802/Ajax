@@ -2,15 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter, Result};
 
 // 地形枚举
-#[derive(
-    Debug, 
-    Clone, 
-    Copy, 
-    PartialEq, 
-    Eq,
-    Deserialize,
-    Serialize
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 pub enum LosTerrain {
     Home,     // 家
     Forest,   // 森林
