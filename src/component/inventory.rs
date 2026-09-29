@@ -79,6 +79,14 @@ impl LosInventory {
         None
     }
 
+    // 迭代
+    pub fn iter_items(&self) -> impl Iterator<Item = (&LosItemId, &[LosEntity])> + '_ {
+        self._l_slots
+            .iter()
+            .map(|(kind, entities)| (kind, entities.as_slice()))
+    }
+
+    // 查看一个 不拿走
     pub fn peek(&self, kind: &LosItemId) -> Option<LosEntity> {
         self._l_slots
             .get(kind)

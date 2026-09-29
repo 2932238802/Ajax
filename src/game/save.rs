@@ -1,4 +1,4 @@
-use crate::{component::LosPosition, world::LosTerrain};
+use crate::{component::LosPosition, entity::item::LosItem, world::LosTerrain};
 use serde::{Deserialize, Serialize};
 
 // 存储的数据
@@ -15,6 +15,7 @@ pub struct SavePlayer {
     pub l_entity_id: i64,
     pub l_position: LosPosition,
     pub l_state: SaveState,
+    pub l_inventory: SaveInventory,
 }
 
 // 地图信息
@@ -42,4 +43,16 @@ pub struct SaveState {
     pub l_cur_hungry: f64,
     pub l_hungry_max: f64,
     pub l_hungry_decay_rate: f64,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SaveItem {
+    pub kind: LosItem,
+    pub count: usize ,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SaveInventory {
+    pub capacity: f64,
+    pub items: Vec<SaveItem>,
 }

@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 use crate::component::apply_able::ApplyWays;
 
-#[derive(Debug, Hash, Clone, PartialEq, Eq, Copy)]
+#[derive(Debug, Hash, Clone, PartialEq, Eq, Copy, Serialize, Deserialize)]
 pub enum LosItem {
     Apple, // 苹果
     Berry, // 浆果

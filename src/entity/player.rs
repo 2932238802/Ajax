@@ -64,13 +64,12 @@ impl LosPlayer {
         register.attach(*entity, Rc::new(MentalBehavior));
     }
 
-    // 从 保存的数据里 来
     pub fn from_save_data(
         data: &SavePlayer,
         world: &mut LosWorld,
         register: &mut LosFuncRegister,
-    ) -> LosEntity {
-        let entity: LosEntity = world.spawn();
+    ) -> Result<LosEntity, String> {
+        let entity = world.spawn();
 
         let mut health = LosHealth::default();
         health.l_current = data.l_state.l_cur_health;
@@ -93,13 +92,31 @@ impl LosPlayer {
 
         world.add_component(
             entity,
-            // 默认出生在家里
             LosPosition {
                 l_position: data.l_position.l_position,
             },
         );
-        world.add_component(entity, LosInventory::new(PLAYER_INVENTORY_CAPACITY));
+
+        let mut inventory = LosInventory::new(data.l_inventory.capacity);
+        for saved_item in &data.l_inventory.items {
+            let entities =
+                EntityFactory::spawn_many(world, register, saved_item.kind, saved_item.count)
+                    .map_err(str::to_owned)?;
+
+            let item_id = LosItemId(saved_item.kind);
+            for item_entity in entities {
+                let size = world
+                    .get_component::<LosCarriable>(item_entity)
+                    .ok_or_else(|| format!("物品实体 {:?} 缺少 LosCarriable 组件", item_entity))?
+                    .l_size;
+
+                inventory
+                    .try_push(&item_id, size, item_entity)
+                    .map_err(str::to_owned)?;
+            }
+        }
+        world.add_component(entity, inventory);
         Self::register_func(register, &entity);
-        entity
+        Ok(entity)
     }
 }

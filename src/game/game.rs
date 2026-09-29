@@ -7,13 +7,13 @@ use std::{
 
 use crate::{
     command::{parser::parser, router::router},
-    component::{LosHealth, LosHungry, LosMental, LosPosition},
+    component::{inventory::LosInventory, LosHealth, LosHungry, LosMental, LosPosition},
     constants::{constant_class::GameState, constant_str},
     ecs::{LosEntity, LosWorld},
     entity::player::LosPlayer,
     game::{
         event::LosEvent,
-        save::{SaveData, SaveMap, SavePlayer, SaveState, SaveTime},
+        save::{SaveData, SaveInventory, SaveItem, SaveMap, SavePlayer, SaveState, SaveTime},
         time::LosTime,
     },
     system::{LosFuncRegister, LosUpdate},
@@ -119,6 +119,23 @@ impl LosGame {
             .get_component::<LosMental>(self.l_player)
             .expect("玩家缺少精神状态组件");
 
+        let inventory = self
+            .l_world
+            .get_component::<LosInventory>(self.l_player)
+            .expect("玩家缺乏 容量 组件");
+        let mut items = Vec::new();
+        for (left, right) in inventory.iter_items() {
+            let item = SaveItem {
+                kind: left.0,
+                count: right.len(),
+            };
+            items.push(item);
+        }
+        let save_inventory = SaveInventory {
+            capacity: inventory.capacity(),
+            items: items,
+        };
+
         let save_state = SaveData {
             l_map: SaveMap {
                 l_map: self.l_world.l_map.get_data().to_vec(),
@@ -127,6 +144,7 @@ impl LosGame {
             l_player: SavePlayer {
                 l_entity_id: self.l_player.l_id,
                 l_position: position.clone(),
+                
                 l_state: SaveState {
                     l_cur_health: player_health_state.l_current,
                     l_health_max: player_health_state.l_max,
@@ -139,6 +157,7 @@ impl LosGame {
                     l_mental_max: player_mental_state.l_max,
                     l_mental_decay_rate: player_mental_state.l_decay_rate,
                 },
+                l_inventory: save_inventory,
             },
 
             l_time: SaveTime {
@@ -200,7 +219,8 @@ impl LosGame {
         world.l_map = map;
         let time = LosTime::from_save_data(&save_data.l_time);
         let mut register = LosFuncRegister::new();
-        let player = LosPlayer::from_save_data(&save_data.l_player, &mut world, &mut register);
+        let player = LosPlayer::from_save_data(&save_data.l_player, &mut world, &mut register)
+            .expect("玩家从保存读取失败");
         Ok(Self {
             l_world: world,
             l_player: player,
@@ -374,10 +394,5 @@ impl LosGame {
                 LosEvent::OnTheVerge { .. } => println!("{}", format!("⚠ {ev}").yellow()),
             }
         }
-    }
-
-    // 拓展事件
-    fn extend_things(&mut self, events: Vec<LosEvent>) {
-        self._l_events.extend(events);
     }
 }
