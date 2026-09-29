@@ -1,9 +1,16 @@
 ﻿use std::rc::Rc;
 
 use crate::{
-    component::{inventory::LosInventory, LosHealth, LosHungry, LosMental, LosPosition},
+    component::{
+        carriable::LosCarriable, inventory::LosInventory, item_id::LosItemId, LosHealth, LosHungry,
+        LosMental, LosPosition,
+    },
     constants::constant_number::PLAYER_INVENTORY_CAPACITY,
     ecs::{LosEntity, LosWorld},
+    entity::{
+        apple::{self, LosApple},
+        item::LosItem::{self, Apple},
+    },
     game::save::SavePlayer,
     system::{
         behavior::{
@@ -31,7 +38,18 @@ impl LosPlayer {
                 l_position: crate::world::LosTerrain::Home,
             },
         );
-        world.add_component(entity, LosInventory::new(PLAYER_INVENTORY_CAPACITY));
+        let mut inventory = LosInventory::new(PLAYER_INVENTORY_CAPACITY);
+        let apple_id_1 = apple::LosApple::spawn(world, register);
+        let apple_id_2 = apple::LosApple::spawn(world, register);
+        let apple_id_3 = apple::LosApple::spawn(world, register);
+        let size = world
+            .get_component::<LosCarriable>(apple_id_1)
+            .unwrap()
+            .l_size;
+        let _ = inventory.try_push(&LosItemId(LosItem::Apple), size, apple_id_1);
+        let _ = inventory.try_push(&LosItemId(LosItem::Apple), size, apple_id_2);
+        let _ = inventory.try_push(&LosItemId(LosItem::Apple), size, apple_id_3);
+        world.add_component(entity, inventory);
         Self::register_func(register, &entity);
         entity
     }

@@ -27,7 +27,7 @@ pub struct LosAlterHungryConsistent {
 impl Default for LosHungry {
     fn default() -> Self {
         Self {
-            l_current: 100.0,
+            l_current: 80.0,
             l_max: 100.0,
             l_decay_rate: 0.23,
             l_starving_threshold: 10.0,

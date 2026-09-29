@@ -29,7 +29,7 @@ pub struct LosAlterMentalConsistent {
 impl Default for LosMental {
     fn default() -> Self {
         Self {
-            l_current: 100.0,
+            l_current: 90.0,
             l_max: 100.0,
             l_decay_rate: 0.001,
             l_broken_threshold: 15.0,

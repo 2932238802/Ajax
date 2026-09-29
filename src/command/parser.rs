@@ -30,6 +30,29 @@ pub fn parser(input_command: &str) -> LosCommand {
 
         "save" => LosCommand::SAVE,
 
+        "bag" | "b" => LosCommand::BAG,
+
+        "go" | "g" => {
+            if number != 2 {
+                return error_use("go");
+            }
+            match parts.next() {
+                Some(dest) => {
+                    if LosMap::isvalid(dest) {
+                        LosCommand::GO {
+                            // 返回 go
+                            des: dest.to_string(),
+                        }
+                    } else {
+                        return error_use("go's args");
+                    }
+                }
+                None => LosCommand::UNKNOWN("缺少目标地点".to_string()),
+            }
+        }
+
+        "map" | "m" => LosCommand::MAP,
+
         "status" | "s" => {
             if number > 2 {
                 return error_use("status");
@@ -68,8 +91,6 @@ pub fn parser(input_command: &str) -> LosCommand {
 
         "time" | "t" => LosCommand::TIME,
 
-        "map" | "m" => LosCommand::MAP,
-
         "use" | "apply" | "us" | "u" => {
             let target_str = match parts.next() {
                 Some(t) => t,
@@ -90,24 +111,7 @@ pub fn parser(input_command: &str) -> LosCommand {
 
             LosCommand::USE { target, way }
         }
-        "go" | "g" => {
-            if number != 2 {
-                return error_use("go");
-            }
-            match parts.next() {
-                Some(dest) => {
-                    if LosMap::isvalid(dest) {
-                        LosCommand::GO {
-                            // 返回 go
-                            des: dest.to_string(),
-                        }
-                    } else {
-                        return error_use("go's args");
-                    }
-                }
-                None => LosCommand::UNKNOWN("缺少目标地点".to_string()),
-            }
-        }
+
         _ => LosCommand::UNKNOWN(input_command.to_string()),
     }
 }

@@ -26,7 +26,7 @@ pub struct LosAlterHealthConsistent {
 impl Default for LosHealth {
     fn default() -> Self {
         Self {
-            l_current: 100.0,
+            l_current: 90.0,
             l_max: 100.0,
             l_hunger_damage_rate: 0.4,
             l_mental_damage_rate: 0.3,

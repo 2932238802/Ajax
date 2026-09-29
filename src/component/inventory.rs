@@ -80,7 +80,9 @@ impl LosInventory {
     }
 
     pub fn peek(&self, kind: &LosItemId) -> Option<LosEntity> {
-        self._l_slots.get(kind).and_then(|group| group.last().copied())
+        self._l_slots
+            .get(kind)
+            .and_then(|group| group.last().copied())
     }
 
     pub fn release_size(&mut self, size: f64) {

@@ -10,8 +10,8 @@ use crate::{
     system::{behavior::eat_behavior::EatBehavior, LosFuncRegister},
 };
 
-pub struct Berry;
-impl Berry {
+pub struct LosBerry;
+impl LosBerry {
     pub fn spawn(world: &mut LosWorld, register: &mut LosFuncRegister) -> LosEntity {
         let entity = world.spawn();
         world.add_component::<LosItemId>(entity, LosItemId(LosItem::Berry));

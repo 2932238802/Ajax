@@ -13,15 +13,15 @@ pub enum LosCommand {
     STOP, // 游戏暂停
     SAVE, // 游戏保存
 
+    BAG,
+    GO {
+        des: String,
+    }, // 前往指令
+    MAP, // 打印地图
     STATUS {
         mode: ExeStatusMode,
     }, // 状态指令
     TIME, // 时间指令
-    MAP,  // 打印地图
-    GO {
-        des: String,
-    }, // 前往指令
-
     USE {
         target: UseTarget,
         way: Option<ApplyWays>,

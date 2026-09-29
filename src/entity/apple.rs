@@ -6,14 +6,14 @@ use crate::{
     },
     ecs::{LosEntity, LosWorld},
     entity::item::LosItem,
-    system::{behavior::eat_behavior::EatBehavior, LosBehavior, LosFuncRegister},
+    system::{behavior::eat_behavior::EatBehavior, LosFuncRegister},
 };
 use std::rc::Rc;
 
-pub struct Apple;
+pub struct LosApple;
 
 // LosCarriable
-impl Apple {
+impl LosApple {
     pub fn spawn(world: &mut LosWorld, register: &mut LosFuncRegister) -> LosEntity {
         let entity = world.spawn();
         world.add_component::<LosItemId>(entity, LosItemId(LosItem::Apple));
@@ -45,5 +45,3 @@ impl Apple {
         entity
     }
 }
-
-impl LosBehavior for Apple {}

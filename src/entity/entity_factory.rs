@@ -14,10 +14,10 @@ impl EntityFactory {
         let entity: LosEntity;
         match kind {
             LosItem::Apple => {
-                entity = apple::Apple::spawn(world, register);
+                entity = apple::LosApple::spawn(world, register);
             }
             LosItem::Berry => {
-                entity = berry::Berry::spawn(world, register);
+                entity = berry::LosBerry::spawn(world, register);
             }
         }
         world.add_component::<LosItemId>(entity, LosItemId(kind));
