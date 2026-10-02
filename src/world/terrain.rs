@@ -37,6 +37,22 @@ impl Display for LosTerrain {
 
 // 接口
 impl LosTerrain {
+    pub fn from_name(name: &str) -> Self {
+        match name {
+            "H" => LosTerrain::Home,
+            "L" => LosTerrain::Forest,
+            "Y" => LosTerrain::Plains,
+            "S" => LosTerrain::Mountain,
+            "R" => LosTerrain::River,
+            "Z" => LosTerrain::Swamp,
+            "M" => LosTerrain::Desert,
+            "C" => LosTerrain::Cave,
+            "T" => LosTerrain::Beach,
+            "A" => LosTerrain::Lake,
+            _ => LosTerrain::None,
+        }
+    }
+
     // 获取 名字
     pub fn get_name(&self) -> &str {
         match self {

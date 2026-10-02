@@ -155,6 +155,20 @@ impl LosMap {
         }
     }
 
+    // 从位置
+    pub fn get_pos(&self, position: &LosTerrain) -> (usize, usize) {
+        let mut pos: (usize, usize) = (0, 0);
+        for i in 0..self.l_map.len() {
+            for j in 0..self.l_map[0].len() {
+                if &self.l_map[i][j] == position {
+                    pos.0 = i;
+                    pos.1 = j;
+                }
+            }
+        }
+        pos
+    }
+
     // 字符串 到 地形
     pub fn str_to_terrain(place: &str) -> LosTerrain {
         match place {
