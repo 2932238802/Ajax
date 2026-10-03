@@ -1,5 +1,6 @@
 use crate::{
     component::LosPosition,
+    constants::constant_number,
     game::{LosGame, LosTime},
     world::{LosMap, LosTerrain},
 };
@@ -25,9 +26,10 @@ pub fn go(game: &mut LosGame, to_place: &str) {
     }
     let from = game.l_world.l_map.get_pos(&current_terrain);
     let to = game.l_world.l_map.get_pos(&target_terrain);
-    let cost_minutes = game.l_world.l_map.distance(from, to).ceil() as u64;
+    let cost_minutes = game.l_world.l_map.distance(from, to).ceil() as f64
+        * constant_number::DEFAULT_BASE_MINUTES_PER_CELL;
     let action_name = format!("正在前往 {}", target_terrain);
-    game.l_time.do_action(&action_name, cost_minutes);
+    game.do_action(&action_name, cost_minutes);
     // 动画完成后，真正更新玩家位置
     if let Some(pos) = game.l_world.get_component_mut::<LosPosition>(game.l_player) {
         pos.l_position = target_terrain;

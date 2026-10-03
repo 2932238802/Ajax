@@ -101,16 +101,16 @@ impl LosTime {
     }
 
     // 动作 名字 和 消耗时间
-    pub fn do_action(&mut self, active_name: &str, cost_minutes: u64) {
+    pub fn do_action(&mut self, action_name: &str, cost_minutes: f64) {
         self.pause(); // 暂停
         let frames = ACTION_ANIMATION;
         for i in 0..15 {
-            print!("\r{} {}", frames[i % frames.len()], active_name);
+            print!("\r{} {}", frames[i % frames.len()], action_name);
             io::stdout().flush().unwrap();
             thread::sleep(Duration::from_millis(100));
         }
-        println!("\r{} 完成! finied: {} 分钟", active_name, cost_minutes);
-        self.advance_minutes(cost_minutes);
+        println!("\r{} 完成! finied: {} 分钟", action_name, cost_minutes);
+        self.advance_minutes(cost_minutes as u64);
         self.resume();
     }
 }

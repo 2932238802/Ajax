@@ -1,7 +1,4 @@
-use crate::{
-    component::{inventory::LosInventory, item_id::LosItemId},
-    game::LosGame,
-};
+use crate::{component::inventory::LosInventory, game::LosGame};
 
 // 玩家指令 展示 背包
 pub fn bag(game: &LosGame) {

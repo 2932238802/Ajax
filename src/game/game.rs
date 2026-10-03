@@ -233,6 +233,12 @@ impl LosGame {
         })
     }
 
+    pub fn do_action(&mut self,action_name: &str,cost_minutes: f64)
+    {
+        self.l_time.do_action(action_name, cost_minutes);
+        self._update(cost_minutes as f64);
+    }
+
     // 开始游戏
     fn _playing(&mut self) {
         let elasped_minute = self.l_time.update();
